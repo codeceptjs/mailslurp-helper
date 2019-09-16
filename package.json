@@ -4,7 +4,7 @@
   "description": "MailSlurp helper for testing emails https://mailslurp.com",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx mocha *_test.js",
     "docs": "npx documentation readme index.js --section=API --shallow"
   },
   "peerDependencies": {
@@ -22,7 +22,8 @@
   "homepage": "https://github.com/codecept-js/mailslurp-helper#readme",
   "dependencies": {
     "chai": "^4.2.0",
-    "codeceptjs": "^2.3.1"
+    "codeceptjs": "^2.3.1",
+    "mailslurp-client": "^6.2.0"
   },
   "devDependencies": {
     "documentation": "^12.1.2",
