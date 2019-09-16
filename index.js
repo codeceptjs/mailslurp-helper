@@ -36,7 +36,7 @@ class MailSlurp {
     if (!this.config.apiKey) {
       throw new Error(`MailSlurp is not configured! Please provide API key to access your account`);
     }
-    this.mailslurp = new MailSlurpClient({ apiKey: this.config.apiKey });
+    this.mailslurp = new MailSlurpClient({ apiKey: this.config.apiKey, attribution: 'codeceptjs' });
   }
   
   _before() {
