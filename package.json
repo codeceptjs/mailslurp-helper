@@ -1,10 +1,11 @@
 {
   "name": "@codeceptjs/mailslurp-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MailSlurp helper for testing emails https://mailslurp.com",
   "main": "index.js",
   "scripts": {
-    "test": "npx mocha *_test.js",
+    "publish": "npm publish --access public",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "docs": "npx documentation readme index.js --section=API --shallow"
   },
   "peerDependencies": {
@@ -14,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/codecept-js/mailslurp-helper.git"
   },
-  "author": "",
+  "author": "Michael Bodnarchuk codeceptjs@sdclabs.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/codecept-js/mailslurp-helper/issues"
@@ -22,8 +23,7 @@
   "homepage": "https://github.com/codecept-js/mailslurp-helper#readme",
   "dependencies": {
     "chai": "^4.2.0",
-    "codeceptjs": "^2.3.1",
-    "mailslurp-client": "^6.2.0"
+    "codeceptjs": "^2.3.1"
   },
   "devDependencies": {
     "documentation": "^12.1.2",
