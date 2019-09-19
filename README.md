@@ -33,7 +33,7 @@ Use this helper in your tests to check email interactions. The most popular one
 ## Use Case: Restore Password
 
 ```js
-const mailbox = await I.haveMailbox();
+const mailbox = await I.haveNewMailbox();
 // register user on a website
 I.registerUser(mailbox.emailAddress);
 // wait 10 seconds for an email
