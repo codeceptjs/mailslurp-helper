@@ -142,17 +142,17 @@ class MailSlurp {
    * 
    * ```js
    *  // wait for email with 'password' in subject
-   * const email = await I.waitForEmail({
+   * const email = await I.waitForEmailMatching({
    *  subject: 'password',
    * });
    * 
    * // wait 30 seconds for email with exact subject
-   * const email = await I.waitForEmail({
+   * const email = await I.waitForEmailMatching({
    *  subject: '=Forgot password',
    * }, 30);
    * 
    * // 
-   * const email = await I.waitForEmail({
+   * const email = await I.waitForEmailMatching({
    *  from: '@mysite.com', // find anything from mysite
    *  subject: 'Restore password', // with Restore password in subject
    * });
