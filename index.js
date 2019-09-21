@@ -67,7 +67,7 @@ class MailSlurp {
   * Switches to last created mailbox.
   * 
   * ```js
-  * const mailbox = await I.haveMailbox();
+  * const mailbox = await I.haveNewMailbox();
   * ```
   */
   async haveNewMailbox() {
