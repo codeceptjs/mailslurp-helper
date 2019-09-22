@@ -40,7 +40,7 @@ I.registerUser(mailbox.emailAddress);
 const email = await I.waitForLatestEmail(10);
 I.seeInEmailSubject('Restore Password');
 I.seeInEmailBody('Click link to restore password');
-const restoreUrl = email.body.matches.match(/http(s):\/\/(.*?)\s/)[0];
+const restoreUrl = email.body.match(/http(s):\/\/(.*?)\s/)[0];
 I.amOnPage(restoreUrl);
 ```
 
