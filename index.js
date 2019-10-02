@@ -212,7 +212,7 @@ class MailSlurp {
     const emailPreviews = await this.mailslurp.waitForMatchingEmails(
       matchEmailBy(query),
       num, 
-      this.inbox.id,
+      this.currentMailbox.id,
       this.config.timeout
     );
     output.debug(`Received ${emailPreviews.length} emails`);
