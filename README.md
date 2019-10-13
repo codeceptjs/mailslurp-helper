@@ -33,22 +33,22 @@ Use this helper in your tests to check email interactions. The most popular one
 ## Use Case: Restore Password
 
 ```js
-const mailbox = await I.haveMailbox();
+const mailbox = await I.haveNewMailbox();
 // register user on a website
 I.registerUser(mailbox.emailAddress);
 // wait 10 seconds for an email
 const email = await I.waitForLatestEmail(10);
 I.seeInEmailSubject('Restore Password');
 I.seeInEmailBody('Click link to restore password');
-const restoreUrl = email.body.matches.match(/http(s):\/\/(.*?)\s/)[0];
+const restoreUrl = email.body.match(/http(s):\/\/(.*?)\s/)[0];
 I.amOnPage(restoreUrl);
 ```
 
 ## Switching Between Mailboxes
 
 ```js
-const mailbox1 = await I.haveMailbox();
-const mailbox2 = await I.haveMailbox();
+const mailbox1 = await I.haveNewMailbox();
+const mailbox2 = await I.haveNewMailbox();
 I.openMailbox(mailbox1);
 const email = I.waitForEmailMatching({ subject: 'Register' });
 ```
@@ -57,7 +57,7 @@ const email = I.waitForEmailMatching({ subject: 'Register' });
 
 ```js
 const assert = require('assert');
-const mailbox = await I.haveMailbox();
+const mailbox = await I.haveNewMailbox();
 const email = await I.waitForEmailMatching({ subject: 'Thanks' });
 assert.eql(email.subject, 'Thanks for registering')
 ```
