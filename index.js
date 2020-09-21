@@ -228,7 +228,7 @@ class MailSlurp {
    * @returns {Promise<[Email]>} emails.
    */
   async grabAllEmailsFromMailbox() {
-    const emailPreviews = await this.mailslurp.getEmails();
+    const emailPreviews = await this.mailslurp.getEmails(this.currentMailbox.id);
     output.debug(`Received ${emailPreviews.length} emails`);
     return Promise.all(emailPreviews.map(e => this.mailslurp.getEmail(e.id)));
   }
