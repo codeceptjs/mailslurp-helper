@@ -46,7 +46,7 @@ class MailSlurp {
   }
 
   async _after() {
-    if (!this.mailboxes.length) return;
+    if (!this.mailboxes || !this.mailboxes.length) return;
     await Promise.all(this.mailboxes.map(m => this.mailslurp.deleteInbox(m.id)));
     output.debug(`Removed ${this.mailboxes.length} mailboxes`);
     this.mailboxes = [];
