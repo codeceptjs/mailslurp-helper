@@ -339,6 +339,53 @@ class MailSlurp {
 
   }
 
+  /**
+   * Checks that current email has expected number of attachments.
+   *
+   * ```js
+   * I.seeNumberOfEmailAttachments(2);
+   * ```
+   *
+   * Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
+   */
+  seeNumberOfEmailAttachments(number) {
+    this._hasCurrentEmail();
+    const email = this.currentEmail;
+    expect(email.attachments.length).to.eql(number, `number of email attachments to equal ${number}`)
+  }
+
+  /**
+   * Checks that current email has an attachment with specified name.
+   *
+   * ```js
+   * I.seeEmailAttachment('ExampleAttachment.pdf');
+   * ```
+   * Be aware that Mailslurp SDK removes special characters in name of attachment,
+   * e.g. "Example-Attachment.pdf" will have name "ExampleAttachment.pdf".
+   *
+   * Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
+   */
+  async seeEmailAttachment(nameRegExp) {
+    this._hasCurrentEmail();
+    const email = this.currentEmail;
+    let foundAttachmentNames = []
+    for (let attachmentId of email.attachments) {
+      let attachmentMetaData = await this.mailslurp.getAttachmentMetaData(attachmentId, email.id)
+      if (attachmentMetaData.name.match(new RegExp(nameRegExp))) {
+        // Attachment found. We are finished here.
+        return
+      }
+      foundAttachmentNames.push(attachmentMetaData.name)
+    }
+    expect.fail(
+        `Attachment with name "${nameRegExp}" not found in e-mail with subject "${email.subject}".`
+        + (foundAttachmentNames.length > 0 ?
+          ` Found attachments: "${foundAttachmentNames.join(',')}"`
+          : ' No attachments found at all in e-mail.'
+        )
+    )
+  }
+
   _hasCurrentEmail() {
     if (!this.currentEmail) throw new Error('No email opened. Open an email with waitForEmail* methods');
   }

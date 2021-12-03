@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { expect } = require('chai');
 const MailSlurp = require('./index');
+const fs = require('fs')
 
 let I;
 
@@ -24,11 +25,22 @@ describe('MailSlurp helper', function () {
   });
 
   it('should send and receive an email', async () => {
+    const attachmentFilename = 'README.md';
+    // Mailslurp automatically modifies filename and adds dynamic characters. Therefore we need RegExp here.
+    const attachmentRegexp = 'README.*\.md';
+
     const mailbox = await I.haveNewMailbox();
+    const fileBase64Encoded = await fs.promises.readFile(attachmentFilename, { encoding: 'base64' });
+    const [ attachmentId ] = await I.mailslurp.uploadAttachment({
+        base64Contents: fileBase64Encoded,
+        contentType: 'text/plain',
+        filename: attachmentFilename,
+    });
     await I.sendEmail({
       to: [mailbox.emailAddress],
       subject: 'Hello Test',
-      body: 'Testing'       
+      body: 'Testing',
+      attachments: [ attachmentId ]
     });
     const email = await I.waitForLatestEmail(50);
     expect(email.body.trim()).to.eql('Testing');
@@ -38,6 +50,8 @@ describe('MailSlurp helper', function () {
     await I.seeInEmailBody('Testing');
     await I.dontSeeInEmailBody('Email');
     await I.dontSeeInEmailSubject('Bye');
+    await I.seeNumberOfEmailAttachments(1);
+    await I.seeEmailAttachment(attachmentRegexp);
   });
 
 

@@ -23,7 +23,7 @@
   "homepage": "https://github.com/codecept-js/mailslurp-helper#readme",
   "dependencies": {
     "chai": "^4.2.0",
-    "mailslurp-client": "^6.5.0"
+    "mailslurp-client": "^6.7.4"
   },
   "devDependencies": {
     "codeceptjs": "^2.3.2",
