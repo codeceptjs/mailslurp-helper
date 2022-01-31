@@ -1,6 +1,6 @@
 {
   "name": "@codeceptjs/mailslurp-helper",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "MailSlurp helper for testing emails https://mailslurp.com",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "docs": "npx documentation readme index.js --section=API --shallow"
   },
   "peerDependencies": {
-    "codeceptjs": "^2.3.0"
+    "codeceptjs": "^3.2.0"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
     "mailslurp-client": "^6.7.4"
   },
   "devDependencies": {
-    "codeceptjs": "^2.6.11",
+    "codeceptjs": "^3.2.0",
     "documentation": "^12.3.0",
     "dotenv": "^8.2.0",
     "mocha": "^6.2.3"
