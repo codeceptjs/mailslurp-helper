@@ -99,6 +99,10 @@ assert.eql(email.subject, 'Thanks for registering')
         -   [Parameters](#parameters-12)
     -   [dontSeeEmailSubjectEquals](#dontseeemailsubjectequals)
         -   [Parameters](#parameters-13)
+    -   [seeNumberOfEmailAttachments](#seenumberofemailattachments)
+        -   [Parameters](#parameters-14)
+    -   [seeEmailAttachment](#seeemailattachment)
+        -   [Parameters](#parameters-15)
 
 ### MailSlurp
 
@@ -357,4 +361,35 @@ Requires an opened email. Use either `waitForEmail*` methods to open. Or open ma
 
 ##### Parameters
 
--   `text`  
+-   `text`
+
+#### seeNumberOfEmailAttachments
+
+Checks that current email has expected number of attachments.
+
+```js
+I.seeNumberOfEmailAttachments(2);
+```
+
+Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
+
+##### Parameters
+
+-   `number`
+
+#### seeEmailAttachment
+
+Checks that current email has an attachment with specified name.
+
+```js
+I.seeEmailAttachment('ExampleAttachment.pdf');
+```
+
+Be aware that Mailslurp SDK removes special characters in name of attachment,
+e.g. "Example-Attachment.pdf" will have name "ExampleAttachment.pdf".
+
+Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
+
+##### Parameters
+
+-   `name`  
