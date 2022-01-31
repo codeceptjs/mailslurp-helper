@@ -7,9 +7,7 @@ MailSlurp creates disposable mailbox for each test and removes it after a test.
 
 Register and obtain API key from [MailSlurp](https://mailslurp.com).
 
-```
-npm i @codeceptjs/mailslurp-helper --save
-```
+    npm i @codeceptjs/mailslurp-helper --save
 
 Enable helper in `codecept.conf.js`.
 
@@ -26,9 +24,9 @@ helpers: {
 
 Use this helper in your tests to check email interactions. The most popular one
 
-* Account activation
-* Restore forgotten password
-* Action verification
+-   Account activation
+-   Restore forgotten password
+-   Action verification
 
 ## Use Case: Restore Password
 
@@ -137,7 +135,7 @@ Creates a new mailbox. A mailbox will be deleted after a test.
 Switches to last created mailbox.
 
 ```js
-const mailbox = await I.haveMailbox();
+const mailbox = await I.haveNewMailbox();
 ```
 
 #### openMailbox
@@ -197,17 +195,17 @@ prepend a value with `=` prefix.
 
 ```js
  // wait for email with 'password' in subject
-const email = await I.waitForEmail({
+const email = await I.waitForEmailMatching({
  subject: 'password',
 });
 
 // wait 30 seconds for email with exact subject
-const email = await I.waitForEmail({
+const email = await I.waitForEmailMatching({
  subject: '=Forgot password',
 }, 30);
 
 // 
-const email = await I.waitForEmail({
+const email = await I.waitForEmailMatching({
  from: '@mysite.com', // find anything from mysite
  subject: 'Restore password', // with Restore password in subject
 });
@@ -361,7 +359,7 @@ Requires an opened email. Use either `waitForEmail*` methods to open. Or open ma
 
 ##### Parameters
 
--   `text`
+-   `text`  
 
 #### seeNumberOfEmailAttachments
 
@@ -375,7 +373,7 @@ Requires an opened email. Use either `waitForEmail*` methods to open. Or open ma
 
 ##### Parameters
 
--   `number`
+-   `number`  
 
 #### seeEmailAttachment
 
@@ -392,4 +390,4 @@ Requires an opened email. Use either `waitForEmail*` methods to open. Or open ma
 
 ##### Parameters
 
--   `name`  
+-   `nameRegExp`  
