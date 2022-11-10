@@ -1,0 +1,18 @@
+{
+    "ts-node": {
+      "files": true
+    },
+    "compilerOptions": {
+      "target": "es2018",
+      "lib": ["es2018", "DOM"],
+      "esModuleInterop": true,
+      "module": "commonjs",
+      "strictNullChecks": false,
+      "types": ["jest", "node"],
+      "declaration": true,
+      "outDir": "./",
+      "baseUrl": "./",
+      "skipLibCheck": true
+    },
+    "exclude": ["node_modules", "index.spec.ts"]
+  }

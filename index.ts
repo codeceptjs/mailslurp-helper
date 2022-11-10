@@ -1,10 +1,11 @@
-const { expect } = require('chai')
-const { output } = require('codeceptjs');
-const { MailSlurp: MailSlurpClient } = require('mailslurp-client');
+import { debug } from './lib/Output';
+import { expect } from 'expect';
+import { MailSlurp as MailSlurpClient } from 'mailslurp-client';
+
 
 /**
- * Allows to use real emails in end 2 end tests via [MailSlurp service](https://mailslurp.com).
- * Sign up for account at MailSlurp to start.
+ * Allows to use real emails in E2E tests via [MailSlurp service](https://mailslurp.com).
+ * Sign up for an account at MailSlurp to start.
  * 
  * A helper requires apiKey from MailSlurp to start
  * 
@@ -24,9 +25,20 @@ const { MailSlurp: MailSlurpClient } = require('mailslurp-client');
  * * `timeout` (default: 10000) - time to wait for emails in milliseconds.
  * 
  */
-class MailSlurp {
 
-  constructor(config) {
+type Configuration = {
+  apiKey: string,
+  timeout?: number
+}
+
+export class MailSlurp {
+  config: any;
+  mailslurp: any;
+  mailboxes: any[];
+  currentMailbox: any;
+  currentEmail: any;
+
+  constructor(config: Configuration) {
 
     const defaults = {
       timeout: 10000,
@@ -48,7 +60,7 @@ class MailSlurp {
   async _after() {
     if (!this.mailboxes || !this.mailboxes.length) return;
     await Promise.all(this.mailboxes.map(m => this.mailslurp.deleteInbox(m.id)));
-    output.debug(`Removed ${this.mailboxes.length} mailboxes`);
+    debug(`Removed ${this.mailboxes.length} mailboxes`);
     this.mailboxes = [];
     this.currentMailbox = null;
     this.currentEmail = null;  
@@ -215,7 +227,7 @@ class MailSlurp {
       this.currentMailbox.id,
       this.config.timeout
     );
-    output.debug(`Received ${emailPreviews.length} emails`);
+    debug(`Received ${emailPreviews.length} emails`);
     return Promise.all(emailPreviews.map(e => this.mailslurp.getEmail(e.id)));
   }
 
@@ -229,7 +241,7 @@ class MailSlurp {
    */
   async grabAllEmailsFromMailbox() {
     const emailPreviews = await this.mailslurp.getEmails(this.currentMailbox.id);
-    output.debug(`Received ${emailPreviews.length} emails`);
+    debug(`Received ${emailPreviews.length} emails`);
     return Promise.all(emailPreviews.map(e => this.mailslurp.getEmail(e.id)));
   }
 
@@ -245,7 +257,7 @@ class MailSlurp {
   seeInEmailSubject(text) {
     this._hasCurrentEmail();
     const email = this.currentEmail;
-    expect(email.subject).to.contain(text, `email subject to contain ${text}`);
+    expect(email.subject).toContain(`${text}`);
   }
 
   /**
@@ -260,7 +272,7 @@ class MailSlurp {
   dontSeeInEmailSubject(text) {
     this._hasCurrentEmail();
     const email = this.currentEmail;
-    expect(email.subject).not.to.contain(text, `email subject not to contain ${text}`);
+    expect(email.subject).not.toContain(`${text}`);
   }
 
   /**
@@ -275,7 +287,7 @@ class MailSlurp {
   seeInEmailBody(text) {
     this._hasCurrentEmail();
     const email = this.currentEmail;
-    expect(email.body).to.contain(text, `email body to contain ${text}`);
+    expect(email.body).toContain(`${text}`);
   }
 
   /**
@@ -290,7 +302,7 @@ class MailSlurp {
   dontSeeInEmailBody(text) {
     this._hasCurrentEmail();
     const email = this.currentEmail;
-    expect(email.body).not.to.contain(text, `email body not to contain ${text}`);
+    expect(email.body).not.toContain(`${text}`);
   }
 
   /**
@@ -305,7 +317,7 @@ class MailSlurp {
   seeEmailIsFrom(text) {
     this._hasCurrentEmail();
     const email = this.currentEmail;
-    expect(email.from).to.contain(text, `email from to contain ${text}`);
+    expect(email.from).toContain(`${text}`);
   }
 
   /**
@@ -320,7 +332,7 @@ class MailSlurp {
   seeEmailSubjectEquals(text) {
     this._hasCurrentEmail();
     const email = this.currentEmail;
-    expect(email.subject).to.eql(text, `email subject to equal ${text}`);
+    expect(email.subject).toEqual(`${text}`);
   }
 
   /**
@@ -335,7 +347,7 @@ class MailSlurp {
   dontSeeEmailSubjectEquals(text) {
     this._hasCurrentEmail();
     const email = this.currentEmail;
-    expect(email.subject).not.to.eql(text, `email subject not to equal ${text}`);
+    expect(email.subject).not.toEqual(`${text}`);
 
   }
 
@@ -351,7 +363,7 @@ class MailSlurp {
   seeNumberOfEmailAttachments(number) {
     this._hasCurrentEmail();
     const email = this.currentEmail;
-    expect(email.attachments.length).to.eql(number, `number of email attachments to equal ${number}`)
+    expect(email.attachments.length).toEqual(number);
   }
 
   /**
@@ -377,13 +389,13 @@ class MailSlurp {
       }
       foundAttachmentNames.push(attachmentMetaData.name)
     }
-    expect.fail(
+    expect(
         `Attachment with name "${nameRegExp}" not found in e-mail with subject "${email.subject}".`
         + (foundAttachmentNames.length > 0 ?
             ` Found attachments: "${foundAttachmentNames.join(',')}"`
             : ' No attachments found at all in e-mail.'
         )
-    )
+    ).toBeFalsy();
   }
 
   _hasCurrentEmail() {
@@ -392,7 +404,7 @@ class MailSlurp {
 }
 
 function printEmailDebug(email) {
-  output.debug(`Received email from ${email.from} with ${email.subject}`);
+  debug(`Received email from ${email.from} with ${email.subject}`);
 }
 
 function matchEmailBy(options) {
@@ -412,4 +424,3 @@ function matchEmailBy(options) {
   })};
 }
 
-module.exports = MailSlurp;

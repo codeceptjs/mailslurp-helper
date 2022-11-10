@@ -1,22 +1,20 @@
 require('dotenv').config();
-const { expect } = require('chai');
-const MailSlurp = require('./index');
-const fs = require('fs')
+import { expect } from 'chai';
+import {MailSlurp} from './index';
+import fs from 'fs';
 
 let I;
 
 describe('MailSlurp helper', function () {
 
-  this.timeout(0);
-
-  before(() => {
+  beforeAll(() => {
     I = new MailSlurp({ apiKey: process.env.API_KEY});
   });
 
   beforeEach(async () => I._before());
   afterEach(async () => I._after());
 
-  it('should create an inbox', async () => {
+  test('should create an inbox', async () => {
     const mailbox = await I.haveNewMailbox();
     expect(mailbox.id).to.be.a('string');
     expect(mailbox.emailAddress).to.be.a('string');
@@ -24,7 +22,7 @@ describe('MailSlurp helper', function () {
     expect(mailbox.toString()).to.eql(mailbox.emailAddress);
   });
 
-  it('should send and receive an email', async () => {
+  test('should send and receive an email', async () => {
     const attachmentFilename = 'README.md';
     // Mailslurp automatically modifies filename and adds dynamic characters. Therefore we need RegExp here.
     const attachmentRegexp = 'README.*\.md';
@@ -55,7 +53,7 @@ describe('MailSlurp helper', function () {
   });
 
 
-  it('should send an email', async () => {
+  test('should send an email', async () => {
     const mailbox = await I.haveNewMailbox();
     await I.sendEmail({
       to: [mailbox.emailAddress],
