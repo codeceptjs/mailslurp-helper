@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "codeceptjs": "^3.2.0",
-    "documentation": "^12.3.0",
+    "documentation": "^14.0.0",
     "dotenv": "^8.2.0",
     "mocha": "^6.2.3"
   }
