@@ -70,6 +70,7 @@ assert.eql(email.subject, 'Thanks for registering')
 -   [Configuration](#configuration)
     -   [Parameters](#parameters)
     -   [haveNewMailbox](#havenewmailbox)
+    -   [haveExistingMailbox](#haveexistingmailbox)
     -   [openMailbox](#openmailbox)
         -   [Parameters](#parameters-1)
     -   [sendEmail](#sendemail)
@@ -136,6 +137,14 @@ Switches to last created mailbox.
 
 ```js
 const mailbox = await I.haveNewMailbox();
+```
+
+#### haveExistingMailbox
+
+Use existing mailbox.
+
+```js
+const mailbox = await I.haveExistingMailbox('94cxxxf4-7231-46ce-9f40-xxxcae39xxxx');
 ```
 
 #### openMailbox
