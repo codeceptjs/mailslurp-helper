@@ -1,4 +1,4 @@
-const colors = require('chalk');
+import colors from 'chalk';
 
 const styles = {
   error: colors.bgRed.white.bold,

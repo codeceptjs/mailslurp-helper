@@ -1,6 +1,6 @@
 require('dotenv').config();
 import { expect } from 'chai';
-import {MailSlurp} from './index';
+import {MailSlurp} from '../src';
 import fs from 'fs';
 
 let I;
@@ -24,7 +24,7 @@ describe('MailSlurp helper', function () {
 
   test('should send and receive an email', async () => {
     const attachmentFilename = 'README.md';
-    // Mailslurp automatically modifies filename and adds dynamic characters. Therefore we need RegExp here.
+    // Mailslurp automatically modifies filename and adds dynamic characters. Therefore, we need RegExp here.
     const attachmentRegexp = 'README.*\.md';
 
     const mailbox = await I.haveNewMailbox();
@@ -58,12 +58,12 @@ describe('MailSlurp helper', function () {
     await I.sendEmail({
       to: [mailbox.emailAddress],
       subject: 'Hello Test',
-      body: 'Testing'       
+      body: 'Testing'
     });
     await I.sendEmail({
       to: [mailbox.emailAddress],
       subject: 'Another Message',
-      body: 'Should be received'       
+      body: 'Should be received'
     });
     const email = await I.waitForEmailMatching({
       subject: 'Hello'

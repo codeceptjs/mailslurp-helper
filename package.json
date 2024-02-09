@@ -2,8 +2,9 @@
   "name": "@codeceptjs/mailslurp-helper",
   "version": "1.0.6",
   "description": "MailSlurp helper for testing emails https://mailslurp.com",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
+    "compile": "tsc",
     "publish": "npm publish --access public",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs": "npx documentation readme index.js --section=API --shallow"
@@ -13,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codecept-js/mailslurp-helper.git"
+    "url": "git+https://github.com/codeceptjs/mailslurp-helper.git"
   },
   "author": "Michael Bodnarchuk codeceptjs@sdclabs.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/codecept-js/mailslurp-helper/issues"
+    "url": "https://github.com/codeceptjs/mailslurp-helper/issues"
   },
-  "homepage": "https://github.com/codecept-js/mailslurp-helper#readme",
+  "homepage": "https://github.com/codeceptjs/mailslurp-helper#readme",
   "dependencies": {
     "chai": "^4.3.4",
     "mailslurp-client": "^6.7.4",
@@ -37,5 +38,6 @@
     "semantic-release": "^19.0.3",
     "ts-jest": "^26.4.4",
     "typescript": "^4.3.5"
-  }
+  },
+  "files": ["dist/*", "README.md"]
 }
