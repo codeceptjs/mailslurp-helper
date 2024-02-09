@@ -9,7 +9,7 @@
     "docs": "npx documentation readme index.js --section=API --shallow"
   },
   "peerDependencies": {
-    "codeceptjs": "^3.2.0"
+    "codeceptjs": "3.5.12"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "ts-node": "^9.0.0"
   },
   "devDependencies": {
-    "codeceptjs": "^3.2.0",
+    "codeceptjs": "3.5.12",
     "documentation": "^12.3.0",
     "dotenv": "^8.2.0",
     "mocha": "^6.2.3",
