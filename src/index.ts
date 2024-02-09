@@ -91,6 +91,27 @@ export class MailSlurp {
   }
 
   /**
+   * Use an existing mailbox.
+   *
+   * ```js
+   * const mailbox = await I.haveExistingMailbox('94cxxxf4-7231-46ce-9f40-xxxcae39xxxx');
+   * ```
+   * @param {string} mailboxId ID of an existing MailSlurp inbox.
+   * @returns {Promise<Inbox>}
+   */
+  async haveExistingMailbox(mailboxId) {
+    if (!mailboxId) {
+      throw new Error('Id of existing mailbox must be provided in parameters.')
+    }
+
+    const inbox = await this.mailslurp.getInbox(mailboxId)
+    inbox.toString = () => inbox.emailAddress;
+    this.mailboxes.push(inbox);
+    this.currentMailbox = inbox;
+    return inbox;
+  }
+
+  /**
   * Change a current mailbox to a provided one:
   * 
   * ```js
