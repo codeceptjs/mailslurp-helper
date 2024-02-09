@@ -18,7 +18,10 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: git config --global user.name "GitHub CD bot"
       - run: git config --global user.email "github-cd-bot@example.com"
-      - run: npx semantic-release
+      - name: Compile code
+        run: npm run compile
+      - name: publish package
+        run: npx semantic-release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
