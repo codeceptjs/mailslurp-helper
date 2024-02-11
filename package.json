@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs": "npx documentation readme index.js --section=API --shallow"
+    "docs": "documentation readme src/index.ts --section=API --shallow"
   },
   "peerDependencies": {
     "codeceptjs": "3.5.12"
