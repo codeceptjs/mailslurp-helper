@@ -2,12 +2,11 @@ import { debug } from './lib/Output';
 import { expect } from 'expect';
 import { MailSlurp as MailSlurpClient } from 'mailslurp-client';
 
-
 /**
  * Allows to use real emails in E2E tests via [MailSlurp service](https://mailslurp.com).
  * Sign up for an account at MailSlurp to start.
  *
- * A helper requires apiKey from MailSlurp to start
+ * A helper requires `apiKey` from MailSlurp to start
  *
  * ```js
  * helpers: {
@@ -23,12 +22,14 @@ import { MailSlurp as MailSlurpClient } from 'mailslurp-client';
  *
  * * `apiKey` (required) -  api key from MailSlurp
  * * `timeout` (default: 10000) - time to wait for emails in milliseconds.
+ * * `debug` (default: false) - print debug logs
  *
  */
 
 type Configuration = {
   apiKey: string,
-  timeout?: number
+  timeout?: number,
+  debug?: boolean
 }
 
 class MailSlurp {
@@ -42,6 +43,7 @@ class MailSlurp {
 
     const defaults = {
       timeout: 10000,
+      debug: false
     };
 
     this.config = Object.assign(defaults, config);
@@ -60,7 +62,7 @@ class MailSlurp {
   async _after() {
     if (!this.mailboxes || !this.mailboxes.length) return;
     await Promise.all(this.mailboxes.map(m => this.mailslurp.deleteInbox(m.id)));
-    debug(`Removed ${this.mailboxes.length} mailboxes`);
+    if (this.config.debug) debug(`Removed ${this.mailboxes.length} mailboxes`);
     this.mailboxes = [];
     this.currentMailbox = null;
     this.currentEmail = null;
@@ -163,7 +165,7 @@ class MailSlurp {
   async waitForLatestEmail(sec) {
     if (sec) sec = 1000*sec;
     const email = await this.mailslurp.waitForLatestEmail(this.currentMailbox.id, sec || this.config.timeout);
-    printEmailDebug(email);
+    printEmailDebug.call(this, email);
     this.currentEmail = email;
     return email;
   }
@@ -202,8 +204,9 @@ class MailSlurp {
       this.currentMailbox.id,
       sec || this.config.timeout
     );
+
     const email = await this.mailslurp.getEmail(emailPreviews[0].id);
-    printEmailDebug(email);
+    printEmailDebug.call(this, email);
     this.currentEmail = email;
     return email;
   }
@@ -224,8 +227,7 @@ class MailSlurp {
     if (sec) sec = 1000*sec;
     const email = await this.mailslurp.waitForNthEmail(this.currentMailbox.id, number, sec || this.config.timeout);
     this.currentEmail = email;
-    printEmailDebug(email);
-    this.currentEmail = email;
+    printEmailDebug.call(this, email);
     return email;
   }
 
@@ -427,7 +429,7 @@ class MailSlurp {
 export = MailSlurp;
 
 function printEmailDebug(email) {
-  debug(`Received email from ${email.from} with ${email.subject}`);
+  if (this.config.debug) debug(`Received email from ${email.from} with ${email.subject}`);
 }
 
 function matchEmailBy(options) {

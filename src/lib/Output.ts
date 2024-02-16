@@ -6,9 +6,9 @@ const styles = {
 };
 
 export function debug(msg) {
-    console.log(styles.log(msg));
-  }
+  console.debug(styles.log(msg));
+}
 
 export function error(msg) {
-console.log(styles.error(msg));
+  console.error(styles.error(msg));
 }
