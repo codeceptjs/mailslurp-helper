@@ -66,55 +66,56 @@ assert.eql(email.subject, 'Thanks for registering')
 
 #### Table of Contents
 
--   [MailSlurp](#mailslurp)
 -   [Configuration](#configuration)
+-   [Configuration](#configuration-1)
+    -   [Properties](#properties)
+-   [haveNewMailbox](#havenewmailbox)
+-   [haveExistingMailbox](#haveexistingmailbox)
     -   [Parameters](#parameters)
-    -   [haveNewMailbox](#havenewmailbox)
-    -   [haveExistingMailbox](#haveexistingmailbox)
-    -   [openMailbox](#openmailbox)
-        -   [Parameters](#parameters-1)
-    -   [sendEmail](#sendemail)
-        -   [Parameters](#parameters-2)
-    -   [waitForLatestEmail](#waitforlatestemail)
-        -   [Parameters](#parameters-3)
-    -   [waitForEmailMatching](#waitforemailmatching)
-        -   [Parameters](#parameters-4)
-    -   [waitForNthEmail](#waitfornthemail)
-        -   [Parameters](#parameters-5)
-    -   [grabEmailsMatching](#grabemailsmatching)
-        -   [Parameters](#parameters-6)
-    -   [grabAllEmailsFromMailbox](#graballemailsfrommailbox)
-    -   [seeInEmailSubject](#seeinemailsubject)
-        -   [Parameters](#parameters-7)
-    -   [dontSeeInEmailSubject](#dontseeinemailsubject)
-        -   [Parameters](#parameters-8)
-    -   [seeInEmailBody](#seeinemailbody)
-        -   [Parameters](#parameters-9)
-    -   [dontSeeInEmailBody](#dontseeinemailbody)
-        -   [Parameters](#parameters-10)
-    -   [seeEmailIsFrom](#seeemailisfrom)
-        -   [Parameters](#parameters-11)
-    -   [seeEmailSubjectEquals](#seeemailsubjectequals)
-        -   [Parameters](#parameters-12)
-    -   [dontSeeEmailSubjectEquals](#dontseeemailsubjectequals)
-        -   [Parameters](#parameters-13)
-    -   [seeNumberOfEmailAttachments](#seenumberofemailattachments)
-        -   [Parameters](#parameters-14)
-    -   [seeEmailAttachment](#seeemailattachment)
-        -   [Parameters](#parameters-15)
+-   [openMailbox](#openmailbox)
+    -   [Parameters](#parameters-1)
+-   [sendEmail](#sendemail)
+    -   [Parameters](#parameters-2)
+-   [waitForLatestEmail](#waitforlatestemail)
+    -   [Parameters](#parameters-3)
+-   [waitForEmailMatching](#waitforemailmatching)
+    -   [Parameters](#parameters-4)
+-   [waitForNthEmail](#waitfornthemail)
+    -   [Parameters](#parameters-5)
+-   [grabEmailsMatching](#grabemailsmatching)
+    -   [Parameters](#parameters-6)
+-   [grabAllEmailsFromMailbox](#graballemailsfrommailbox)
+-   [seeInEmailSubject](#seeinemailsubject)
+    -   [Parameters](#parameters-7)
+-   [dontSeeInEmailSubject](#dontseeinemailsubject)
+    -   [Parameters](#parameters-8)
+-   [seeInEmailBody](#seeinemailbody)
+    -   [Parameters](#parameters-9)
+-   [dontSeeInEmailBody](#dontseeinemailbody)
+    -   [Parameters](#parameters-10)
+-   [seeEmailIsFrom](#seeemailisfrom)
+    -   [Parameters](#parameters-11)
+-   [seeEmailSubjectEquals](#seeemailsubjectequals)
+    -   [Parameters](#parameters-12)
+-   [dontSeeEmailSubjectEquals](#dontseeemailsubjectequals)
+    -   [Parameters](#parameters-13)
+-   [seeNumberOfEmailAttachments](#seenumberofemailattachments)
+    -   [Parameters](#parameters-14)
+-   [seeEmailAttachment](#seeemailattachment)
+    -   [Parameters](#parameters-15)
 
-### MailSlurp
+### Configuration
 
-Allows to use real emails in end 2 end tests via [MailSlurp service](https://mailslurp.com).
-Sign up for account at MailSlurp to start.
+Allows to use real emails in E2E tests via [MailSlurp service](https://mailslurp.com).
+Sign up for an account at MailSlurp to start.
 
-A helper requires apiKey from MailSlurp to start
+A helper requires `apiKey` from MailSlurp to start
 
 ```js
 helpers: {
   MailSlurp: {
     apiKey: '<insert api key here>',
-    require: '@codeceptjs/mailslurp-helper'    
+    require: '@codeceptjs/mailslurp-helper'
   },
 }
 ```
@@ -125,12 +126,17 @@ helpers: {
 
 -   `apiKey` (required) -  api key from MailSlurp
 -   `timeout` (default: 10000) - time to wait for emails in milliseconds.
+-   `debug` (default: false) - print debug logs
 
-#### Parameters
+Type: {apiKey: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), timeout: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?, debug: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?}
 
--   `config`  
+#### Properties
 
-#### haveNewMailbox
+-   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `timeout` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** 
+-   `debug` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** 
+
+### haveNewMailbox
 
 Creates a new mailbox. A mailbox will be deleted after a test.
 Switches to last created mailbox.
@@ -139,15 +145,21 @@ Switches to last created mailbox.
 const mailbox = await I.haveNewMailbox();
 ```
 
-#### haveExistingMailbox
+### haveExistingMailbox
 
-Use existing mailbox.
+Use an existing mailbox.
 
 ```js
 const mailbox = await I.haveExistingMailbox('94cxxxf4-7231-46ce-9f40-xxxcae39xxxx');
 ```
 
-#### openMailbox
+#### Parameters
+
+-   `mailboxId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** ID of an existing MailSlurp inbox.
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;Inbox>** 
+
+### openMailbox
 
 Change a current mailbox to a provided one:
 
@@ -159,11 +171,11 @@ const mailbox2 = await I.haveMailbox();
 I.openMailbox(mailbox)
 ```
 
-##### Parameters
+#### Parameters
 
 -   `mailbox`  
 
-#### sendEmail
+### sendEmail
 
 Sends an email from current mailbox, created by `I.haveNewMailbox()`.
 
@@ -171,15 +183,15 @@ Sends an email from current mailbox, created by `I.haveNewMailbox()`.
 I.sendEmail({
   to: ['user@site.com'],
   subject: 'Hello',
-  body: 'World'       
+  body: 'World'
 });
 ```
 
-##### Parameters
+#### Parameters
 
 -   `data`  
 
-#### waitForLatestEmail
+### waitForLatestEmail
 
 Waits for the first email in mailbox.
 If mailbox is not empty - opens the last email.
@@ -190,16 +202,16 @@ I.waitForLatestEmail()
 I.waitForLatestEmail(30);
 ```
 
-##### Parameters
+#### Parameters
 
 -   `sec` **num?** Number of seconds to wait.
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;Email>** an email received.
 
-#### waitForEmailMatching
+### waitForEmailMatching
 
 Wait for an exact email matched by query. You can match emails by `from`, `to`, `subject`, `cc`, `bcc` fields.
-My default, non-strcit matching enabled, so it searches for inclusion of a string. For a strict matching (equality) 
+My default, non-strcit matching enabled, so it searches for inclusion of a string. For a strict matching (equality)
 prepend a value with `=` prefix.
 
 ```js
@@ -213,21 +225,21 @@ const email = await I.waitForEmailMatching({
  subject: '=Forgot password',
 }, 30);
 
-// 
+//
 const email = await I.waitForEmailMatching({
  from: '@mysite.com', // find anything from mysite
  subject: 'Restore password', // with Restore password in subject
 });
 ```
 
-##### Parameters
+#### Parameters
 
 -   `query` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** to locate an email
 -   `sec` **num?** Number of seconds to wait.
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;Email>** an email received.
 
-#### waitForNthEmail
+### waitForNthEmail
 
 Wait for exact number of emails in mailbox. Returns the last email in the list.
 
@@ -237,17 +249,17 @@ I.waitForNthEmail(2);
 // wait for 5 emails for 60 seconds
 I.waitForNthEmail(5, 60);
 // wait for 2 emails and return the last one
-const email = await I.waitForNthEmail(2); 
+const email = await I.waitForNthEmail(2);
 ```
 
-##### Parameters
+#### Parameters
 
 -   `number`  
 -   `sec`  
 
-#### grabEmailsMatching
+### grabEmailsMatching
 
-Returns a bunch of emails matched by query. 
+Returns a bunch of emails matched by query.
 Similar to `waitForEmailMatching` but returns an array of emails.
 
 ```js
@@ -255,14 +267,14 @@ Similar to `waitForEmailMatching` but returns an array of emails.
 const emails = await I.grabEmailsMatching({ from: 'user@user.com'}, 2);
 ```
 
-##### Parameters
+#### Parameters
 
 -   `query` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** to locate an email
 -   `num` **num?** Number of emails to return.
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;\[Email]>** emails matching criteria.
 
-#### grabAllEmailsFromMailbox
+### grabAllEmailsFromMailbox
 
 Returns all emails from a mailbox.
 
@@ -272,7 +284,7 @@ const emails = await I.grabAllEmailsFromMailbox();
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;\[Email]>** emails.
 
-#### seeInEmailSubject
+### seeInEmailSubject
 
 Checks that current email subject contains a text.
 
@@ -282,11 +294,11 @@ I.seeInEmailSubject('Restore password');
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `text`  
 
-#### dontSeeInEmailSubject
+### dontSeeInEmailSubject
 
 Checks that current email subject does not contain a text.
 
@@ -296,11 +308,11 @@ I.seeInEmailSubject('Restore password');
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `text`  
 
-#### seeInEmailBody
+### seeInEmailBody
 
 Checks that current email body contains a text.
 
@@ -310,11 +322,11 @@ I.seeInEmailBody('Click link');
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `text`  
 
-#### dontSeeInEmailBody
+### dontSeeInEmailBody
 
 Checks that current email body does not contain a text.
 
@@ -324,11 +336,11 @@ I.dontSeeInEmailBody('Click link');
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `text`  
 
-#### seeEmailIsFrom
+### seeEmailIsFrom
 
 Checks that email is from a specified address.
 
@@ -338,11 +350,11 @@ I.seeEmailIsFrom('user@user.com');
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `text`  
 
-#### seeEmailSubjectEquals
+### seeEmailSubjectEquals
 
 Checks that current email subject equals to text.
 
@@ -352,11 +364,11 @@ I.seeEmailSubjectEquals('Restore password');
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `text`  
 
-#### dontSeeEmailSubjectEquals
+### dontSeeEmailSubjectEquals
 
 Checks that current email subject doesn't equal to text.
 
@@ -366,11 +378,11 @@ I.dontSeeEmailSubjectEquals('Restore password');
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `text`  
 
-#### seeNumberOfEmailAttachments
+### seeNumberOfEmailAttachments
 
 Checks that current email has expected number of attachments.
 
@@ -380,11 +392,11 @@ I.seeNumberOfEmailAttachments(2);
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `number`  
 
-#### seeEmailAttachment
+### seeEmailAttachment
 
 Checks that current email has an attachment with specified name.
 
@@ -397,6 +409,6 @@ e.g. "Example-Attachment.pdf" will have name "ExampleAttachment.pdf".
 
 Requires an opened email. Use either `waitForEmail*` methods to open. Or open manually with `I.openEmail()` method.
 
-##### Parameters
+#### Parameters
 
 -   `nameRegExp`  
