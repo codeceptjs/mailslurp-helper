@@ -38,6 +38,7 @@ class MailSlurp {
   mailboxes: any[];
   currentMailbox: any;
   currentEmail: any;
+  useExisitngMailbox: boolean;
 
   constructor(config: Configuration) {
 
@@ -61,8 +62,10 @@ class MailSlurp {
 
   async _after() {
     if (!this.mailboxes || !this.mailboxes.length) return;
-    await Promise.all(this.mailboxes.map(m => this.mailslurp.deleteInbox(m.id)));
-    if (this.config.debug) debug(`Removed ${this.mailboxes.length} mailboxes`);
+    if (!this.useExisitngMailbox) {
+      await Promise.all(this.mailboxes.map(m => this.mailslurp.deleteInbox(m.id)));
+      if (this.config.debug) debug(`Removed ${this.mailboxes.length} mailboxes`);
+    }
     this.mailboxes = [];
     this.currentMailbox = null;
     this.currentEmail = null;
@@ -110,6 +113,7 @@ class MailSlurp {
     inbox.toString = () => inbox.emailAddress;
     this.mailboxes.push(inbox);
     this.currentMailbox = inbox;
+    this.useExisitngMailbox = true;
     return inbox;
   }
 
