@@ -9,7 +9,7 @@
     "docs": "documentation readme src/index.ts --section=API --shallow"
   },
   "peerDependencies": {
-    "codeceptjs": "3.6.5"
+    "codeceptjs": ">=3.6.5"
   },
   "repository": {
     "type": "git",
