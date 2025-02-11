@@ -19,7 +19,7 @@ jobs:
       - run: git config --global user.name "GitHub CD bot"
       - run: git config --global user.email "github-cd-bot@example.com"
       - name: Install deps
-        run: npm i
+        run: npm i -f
       - name: Compile code
         run: npm run compile
       - name: publish package
