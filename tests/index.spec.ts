@@ -1,6 +1,6 @@
 import nock from 'nock';
 require('dotenv').config();
-import { expect } from 'chai';
+import {expect, test} from '@jest/globals';
 import MailSlurp = require("../src");
 import fs from 'fs';
 
@@ -97,10 +97,9 @@ describe('MailSlurp helper', function () {
 
   test('should create an inbox', async () => {
     const mailbox = await I.haveNewMailbox();
-    expect(mailbox.id).to.be.a('string');
-    expect(mailbox.emailAddress).to.be.a('string');
-    expect(mailbox.emailAddress).to.contain('@');
-    expect(mailbox.toString()).to.eql(mailbox.emailAddress);
+    expect(mailbox.id).toBe('123');
+    expect(mailbox.emailAddress).toBe('hello@test.de');
+    expect(mailbox.toString()).toEqual(mailbox.emailAddress);
   });
 
   test('should send and receive an email', async () => {
@@ -122,7 +121,7 @@ describe('MailSlurp helper', function () {
       attachments: [ attachmentId ]
     });
     const email = await I.waitForLatestEmail(50);
-    expect(email.body.trim()).to.eql('Testing');
+    expect(email.body.trim()).toEqual('Testing');
     await I.seeInEmailSubject('Hello');
     await I.seeEmailSubjectEquals('Hello Test');
     await I.seeEmailIsFrom(mailbox.emailAddress);
@@ -149,7 +148,7 @@ describe('MailSlurp helper', function () {
     });
     
     // Since the persistent mock returns emailObj, this should work
-    expect(email.body.trim()).to.eql('Testing');
+    expect(email.body.trim()).toEqual('Testing');
     await I.seeInEmailSubject('Hello');
     await I.seeEmailSubjectEquals('Hello Test');
   }, 10000);
