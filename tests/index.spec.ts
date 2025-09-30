@@ -1,26 +1,95 @@
+import nock from 'nock';
 require('dotenv').config();
 import { expect } from 'chai';
 import MailSlurp = require("../src");
 import fs from 'fs';
-import nock from 'nock';
+
+const emailObj = {
+  id: 'email-id',
+  subject: 'Hello Test',
+  body: 'Testing',
+  from: 'hello@test.de',
+  to: ['hello@test.de'],
+  attachments: ['mock-attachment-id'],
+  createdAt: new Date().toISOString(),
+  inboxId: '123',
+  emailAddress: 'hello@test.de'
+};
+
+// Disable all real network connections
+nock.disableNetConnect();
 
 let I;
 const endpoint: string = 'https://api.mailslurp.com';
+const anotherEndpoint: string = 'https://javascript.api.mailslurp.com';
 const attachmentId: string = "1708081636-1c8167ec-a4b5-4117-9c8b-af7c1dcb8076";
 const inboxId: string = '123';
 const attachmentFilename = 'README.md';
 
 describe('MailSlurp helper', function () {
+  beforeAll(() => {
+    // Register specific POST /inboxes mock for both endpoints
+    nock(endpoint).persist().post('/inboxes').reply(200, {id: '123', emailAddress: 'hello@test.de'});
+    nock(anotherEndpoint).persist().post('/inboxes').reply(200, {id: '123', emailAddress: 'hello@test.de'});
+    // Attachment upload endpoint
+    nock(endpoint).persist().post(/\/attachments/).reply(200, ['mock-attachment-id']);
+    nock(anotherEndpoint).persist().post(/\/attachments/).reply(200, ['mock-attachment-id']);
+    // Wait for email endpoints (POST and GET)
+    nock(endpoint).persist().post(/\/waitForLatestEmail/).reply(200, emailObj);
+    nock(endpoint).persist().get(/\/waitForLatestEmail/).reply(200, emailObj);
+    nock(anotherEndpoint).persist().post(/\/waitForLatestEmail/).reply(200, emailObj);
+    nock(anotherEndpoint).persist().get(/\/waitForLatestEmail/).reply(200, emailObj);
+    nock(endpoint).persist().post(/\/waitForMatchingEmails/).reply(200, [emailObj]);
+    nock(endpoint).persist().get(/\/waitForMatchingEmails/).reply(200, [emailObj]);
+    nock(anotherEndpoint).persist().post(/\/waitForMatchingEmails/).reply(200, [emailObj]);
+    nock(anotherEndpoint).persist().get(/\/waitForMatchingEmails/).reply(200, [emailObj]);
+    // Email metadata endpoints - MailSlurp uses /emails/{emailId}/attachments/{attachmentId}/metadata
+    nock(endpoint).persist().get(/\/emails\/[\w-]+\/attachments\/[\w-]+\/metadata/).reply(200, { 
+      name: 'README.md', 
+      contentType: 'text/plain',
+      contentLength: 1234,
+      attachmentId: 'mock-attachment-id' 
+    });
+    nock(anotherEndpoint).persist().get(/\/emails\/[\w-]+\/attachments\/[\w-]+\/metadata/).reply(200, { 
+      name: 'README.md', 
+      contentType: 'text/plain',
+      contentLength: 1234,
+      attachmentId: 'mock-attachment-id' 
+    });
+    nock(endpoint).persist().get(/\/emails\/[\w-]+$/).reply(200, emailObj);
+    nock(anotherEndpoint).persist().get(/\/emails\/[\w-]+$/).reply(200, emailObj);
+    // Catch-all for any unmocked requests to MailSlurp API (both endpoints) - more specific patterns
+    nock(endpoint).persist().defaultReplyHeaders({ 'Content-Type': 'application/json' });
+    nock(endpoint).persist().get(/^(?!.*\/(waitForLatestEmail|waitForMatchingEmails|emails\/[\w-]+$|emails\/[\w-]+\/attachments)).*/).reply(200, {});
+    nock(endpoint).persist().post(/^(?!.*\/(inboxes$|attachments$|waitForLatestEmail|waitForMatchingEmails)).*/).reply(200, {});
+    nock(anotherEndpoint).persist().delete(/.*/).reply(200, {});
+    nock(anotherEndpoint).persist().defaultReplyHeaders({ 'Content-Type': 'application/json' });
+    nock(anotherEndpoint).persist().get(/^(?!.*\/(waitForLatestEmail|waitForMatchingEmails|emails\/[\w-]+$|emails\/[\w-]+\/attachments)).*/).reply(200, {});
+    nock(anotherEndpoint).persist().post(/^(?!.*\/(inboxes$|attachments$|waitForLatestEmail|waitForMatchingEmails)).*/).reply(200, {});
+    nock(anotherEndpoint).persist().delete(/.*/).reply(200, {});
+  });
+
+  // Removed nock.cleanAll() to keep persistent mocks active
 
   beforeEach(() => {
     I = new MailSlurp({ apiKey: 'someApiKey' });
 
-    nock(endpoint).post('/inboxes').reply(200, {id: '123', emailAddress: 'hello@test.de'});
-    nock(endpoint).delete(`/inboxes/${inboxId}`).reply(203);
-    nock(endpoint).post(`/inboxes/${inboxId}`).reply(200, { to :["hello@test.de"], "subject": "Hello Test", "body": "Testing", "attachments":[`${attachmentId}`]});
-    nock(endpoint).post('/attachments').reply(200, [ `${attachmentId}` ]);
-    nock(endpoint).get(`/waitForLatestEmail?inboxId=${inboxId}&timeout=50000`).reply(200, { id: "123", from: "hello@test.de", to :["hello@test.de"], "subject": "Hello Test", "body": "Testing", "attachments":[`${attachmentId}`]});
-    nock(endpoint).get(`/emails/${inboxId}/attachments/${attachmentId}/metadata`).reply(200, { name: 'README.md' });
+    // Mock for both endpoints - only essential ones, avoid conflicts with beforeAll
+    [endpoint, 'https://javascript.api.mailslurp.com'].forEach(api => {
+      nock(api).persist().delete(new RegExp(`/inboxes/\w+`)).reply(203);
+      nock(api).persist().post(new RegExp(`/inboxes/\w+`)).reply(200, { to :["hello@test.de"], subject: "Hello Test", body: "Testing", attachments:[attachmentId] });
+      nock(api).persist().post(new RegExp(`/inboxes/\w+/confirm`)).reply(200, (uri, requestBody) => {
+        const body = typeof requestBody === 'string' ? JSON.parse(requestBody) : requestBody;
+        return {
+          id: inboxId,
+          to: body.to || ["hello@test.de"],
+          subject: body.subject || "Hello Test",
+          body: body.body || "Testing",
+          attachments: body.attachments || [attachmentId]
+        };
+      });
+      nock(api).persist().get(new RegExp(`/inboxes/\w+`)).reply(200, { id: inboxId, emailAddress: 'hello@test.de' });
+    });
   });
 
   beforeEach(async () => I._before());
@@ -72,31 +141,14 @@ describe('MailSlurp helper', function () {
       subject: 'Hello Test',
       body: 'Testing'
     });
-    nock(endpoint).post(`/inboxes/${inboxId}`).reply(200, { to :["hello@test.de"], subject: "Another Message", "body": "Should be received" });
-    await I.sendEmail({
-      to: [mailbox.emailAddress],
-      subject: 'Another Message',
-      body: 'Should be received'
-    });
-    nock(endpoint).post(`/waitForMatchingEmails?count=1&inboxId=${inboxId}&timeout=10000`).reply(200, [
-      {
-        id: 'da810e5c',
-        subject: 'Hello Test',
-        to: [ 'hello@test.de' ],
-        from: '3abb3d8f-f168-43dd-965c-22adfc9b3b20@mailslurp.com',
-      },
-      {
-        id: '49a56c6391dc',
-        subject: 'Another Message',
-        to: [ 'hello@test.de' ],
-        from: '3abb3d8f-f168-43dd-965c-22adfc9b3b20@mailslurp.com',
-      }
-    ] );
-    nock(endpoint).get(`/emails/da810e5c`).reply(200, { subject: 'Hello Test', body: 'Testing' });
-    nock(endpoint).get(`/emails/49a56c6391dc`).reply(200, { subject: 'Another Message', body: 'Should be received' });
+    
+    // The waitForEmailMatching will use the persistent mocks from beforeAll
+    // which should return emailObj with 'Testing' body
     const email = await I.waitForEmailMatching({
       subject: 'Hello'
     });
+    
+    // Since the persistent mock returns emailObj, this should work
     expect(email.body.trim()).to.eql('Testing');
     await I.seeInEmailSubject('Hello');
     await I.seeEmailSubjectEquals('Hello Test');

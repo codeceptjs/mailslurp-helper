@@ -24,7 +24,7 @@
   "dependencies": {
     "chai": "^4.3.4",
     "expect": "^30.2.0",
-    "mailslurp-client": "^6.7.4",
+    "mailslurp-client": "^16.0.0",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
