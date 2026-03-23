@@ -39,7 +39,7 @@
     "nock": "^14.0.1",
     "semantic-release": "^25.0.2",
     "ts-jest": "^29.4.4",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "files": [
     "dist/*",
