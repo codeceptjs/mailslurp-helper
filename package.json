@@ -23,7 +23,7 @@
   "homepage": "https://github.com/codeceptjs/mailslurp-helper#readme",
   "dependencies": {
     "expect": "^30.2.0",
-    "mailslurp-client": "^16.0.0",
+    "mailslurp-client": "^17.2.0",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
