@@ -11,7 +11,9 @@
       "types": ["jest", "node"],
       "declaration": true,
       "outDir": "./dist",
-      "baseUrl": "./src",
+      "paths": {
+            "*": ["./src/*"]
+        },
       "skipLibCheck": true
     },
     "exclude": ["node_modules",
