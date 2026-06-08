@@ -8,6 +8,7 @@
       "esModuleInterop": true,
       "module": "commonjs",
       "strictNullChecks": false,
+      "noImplicitAny": false,
       "types": ["jest", "node"],
       "declaration": true,
       "outDir": "./dist",
