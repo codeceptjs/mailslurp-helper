@@ -34,7 +34,7 @@
     "babel-jest": "^30.2.0",
     "codeceptjs": "^4.0.3",
     "documentation": "^14.0.3",
-    "dotenv": "^17.2.3",
+    "dotenv": "^18.0.0",
     "jest": "30.4.2",
     "nock": "^14.0.1",
     "semantic-release": "^25.0.2",
